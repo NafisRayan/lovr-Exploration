@@ -13,6 +13,7 @@ local function spawnObject()
         y = 2, -- Start at the top
         z = -3, -- Same depth as the paddle
         size = 0.2,
+        vy = -objectSpeed, -- Vertical velocity (falling down)
         caught = false
     }
     table.insert(objects, object)
@@ -42,14 +43,14 @@ function lovr.update(dt)
     -- Update falling objects
     for i = #objects, 1, -1 do
         local object = objects[i]
-        object.y = object.y - objectSpeed * dt
+        object.y = object.y + object.vy * dt -- Update position using velocity
 
-        -- Check if the object is caught by the paddle
+        -- Check if the object hits the paddle
         if not object.caught and
            object.y < paddle.y + paddle.height / 2 and
            object.x > paddle.x - paddle.width / 2 and
            object.x < paddle.x + paddle.width / 2 then
-            object.caught = true
+            object.vy = -object.vy -- Reverse vertical velocity (bounce)
             score = score + 1
             objectSpeed = objectSpeed + 0.1 -- Increase difficulty
         end
@@ -66,7 +67,6 @@ function lovr.draw(pass)
     -- Draw the paddle as a flat rectangle with thickness
     pass:setColor(0, 1, 1)
     pass:plane(paddle.x, paddle.y, paddle.z, paddle.width, paddle.height)
-    -- pass:cube(paddle.x, paddle.y, paddle.z, paddle.width, paddle.height, paddle.thickness)
 
     -- Draw the falling objects
     pass:setColor(1, 0, 0)
