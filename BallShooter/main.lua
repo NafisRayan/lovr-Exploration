@@ -20,7 +20,8 @@ local function spawnTarget()
         z = -5,                 -- Fixed depth
         size = 0.3,
         speed = math.random(1, 3), -- Random movement speed
-        direction = math.random() > 0.5 and 1 or -1, -- Random movement direction
+        directionX = math.random() > 0.5 and 1 or -1, -- Random X direction
+        directionY = math.random() > 0.5 and 1 or -1, -- Random Y direction
         active = true
     }
     table.insert(targets, target)
@@ -71,10 +72,16 @@ function lovr.update(dt)
     for i = #targets, 1, -1 do
         local target = targets[i]
 
-        -- Move targets horizontally
-        target.x = target.x + target.speed * target.direction * dt
+        -- Move targets randomly in X and Y directions
+        target.x = target.x + target.speed * target.directionX * dt
+        target.y = target.y + target.speed * target.directionY * dt
+
+        -- Reverse direction if target hits the edges
         if target.x > 2 or target.x < -2 then
-            target.direction = -target.direction -- Reverse direction at edges
+            target.directionX = -target.directionX
+        end
+        if target.y > 3 or target.y < 1 then
+            target.directionY = -target.directionY
         end
 
         -- Check for bullet collisions
