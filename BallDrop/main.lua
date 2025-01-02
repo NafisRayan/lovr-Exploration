@@ -1,5 +1,5 @@
 -- Game variables
-local paddle = { x = 0, y = -1.5, z = -3, width = 0.5, height = 0.1 }
+local paddle = { x = 0, y = -1.5, z = -3, width = 1, height = 0.1, thickness = 0.05 }
 local objects = {}
 local score = 0
 local objectSpeed = 1
@@ -63,9 +63,10 @@ end
 
 -- Draw function
 function lovr.draw(pass)
-    -- Draw the paddle
+    -- Draw the paddle as a flat rectangle with thickness
     pass:setColor(0, 1, 1)
     pass:plane(paddle.x, paddle.y, paddle.z, paddle.width, paddle.height)
+    -- pass:cube(paddle.x, paddle.y, paddle.z, paddle.width, paddle.height, paddle.thickness)
 
     -- Draw the falling objects
     pass:setColor(1, 0, 0)
