@@ -18,25 +18,20 @@ local function spawnObject()
     table.insert(objects, object)
 end
 
--- Update function
-function lovr.update(dt)
-    -- Move the paddle with the controller or keyboard
-    if lovr.headset.getDriver() == 'desktop' and lovr.keyboard then
-        local speed = 2 * dt
-        if lovr.keyboard.isDown('left') then
-            paddle.x = paddle.x - speed
-        elseif lovr.keyboard.isDown('right') then
-            paddle.x = paddle.x + speed
-        end
-    elseif lovr.headset.getDriver() == 'vr' and lovr.headset.getControllers then
-        -- Use the VR controller to move the paddle
-        local controller = lovr.headset.getControllers()[1]
-        if controller then
-            local x, y, z = controller:getPosition()
-            paddle.x = x
-        end
+-- Input handling
+function lovr.keypressed(key)
+    if key == '1' then
+        paddle.x = paddle.x - 0.2 -- Move left
+    elseif key == '2' then
+        paddle.x = paddle.x + 0.2 -- Move right
     end
 
+    -- Clamp paddle position to keep it within the screen bounds
+    paddle.x = math.max(-1.5, math.min(1.5, paddle.x)) -- Adjust bounds as needed
+end
+
+-- Update function
+function lovr.update(dt)
     -- Spawn new objects
     timeSinceLastSpawn = timeSinceLastSpawn + dt
     if timeSinceLastSpawn > spawnRate then
